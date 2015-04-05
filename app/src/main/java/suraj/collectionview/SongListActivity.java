@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -21,6 +23,8 @@ public class SongListActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_list);
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
 
         CustomGrid customGrid = new CustomGrid(context);
         GridView gridView = (GridView) findViewById(R.id.gridView);
@@ -35,13 +39,9 @@ public class SongListActivity extends ActionBarActivity {
             }
         });
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        SongListFragment songListFragment = new SongListFragment();
-
-        fragmentTransaction.add(R.id.fragmentContainer, songListFragment, "Hello");
-
-        fragmentTransaction.commit();
+        TextView textView = new TextView(this);
+        textView.setText("This is something");
+        linearLayout.addView(textView);
 
     }
 
