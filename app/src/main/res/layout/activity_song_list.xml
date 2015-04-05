@@ -5,46 +5,54 @@
     android:id="@+id/linear"
     >
 
+    <!--
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="suraj.collectionview.SongListFragment"
+
+        />
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="suraj.collectionview.SongListFragment"
+
+        />
+
+        -->
+
+    <!--<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Group Name"
+        android:id="@+id/group"
+        />
+
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numColumns="auto_fit"
+        android:id="@+id/gridView"
+        ></GridView>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Group Name"
+        android:id="@+id/group"
 
         />
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
+    <GridView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="0dp"
-        android:layout_margin="0dp"
-        >
+        android:numColumns="auto_fit"
+        android:id="@+id/gridView"
+        ></GridView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:scrollbars="none"
-            >
+        -->
 
-            <GridView
-                android:id="@+id/gridView"
-                android:layout_width="500dp"
-                android:layout_height="wrap_content"
-                android:columnWidth="200dp"
-                android:numColumns="3"
-                android:stretchMode="columnWidth"
-
-                android:verticalSpacing="20dp"
-                android:horizontalSpacing="20dp"
-                android:padding="20dp"
-
-                >
-
-            </GridView>
-        </LinearLayout>
-    </HorizontalScrollView>
 
 
 </LinearLayout>

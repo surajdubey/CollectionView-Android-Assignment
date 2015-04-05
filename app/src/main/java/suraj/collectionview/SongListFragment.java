@@ -12,6 +12,8 @@ public class SongListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
+
         //Inflate layout for this fragment
         return inflater.inflate(R.layout.song_list_fragment, container, false);
     }
