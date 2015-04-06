@@ -1,14 +1,19 @@
 package suraj.collectionview;
 
+
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.GridLayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,11 +32,47 @@ public class SongListActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+
         setContentView(R.layout.activity_song_list);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(0xff00DDED));
+        //Enabling dropdown list for ActionBar
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
 
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
 
-        for(int i=0;i<2;i++) {
+        final GridView gridView[] = new GridView[15];
+
+        //for number of rows displayed on right hand side
+        final String rowNumber[] = {"1","2","3","4","5"};
+
+        //ArrayAdapter to populate dropdown list
+        ArrayAdapter<String> rowNumberAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, rowNumber);
+
+
+        //defining navigation listener
+        ActionBar.OnNavigationListener onNavigationListener = new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                Toast.makeText(context, "Selected : "+rowNumber[itemPosition], Toast.LENGTH_SHORT).show();
+
+                for(int i=0;i<15;i++)
+                {
+                    gridView[i].setNumColumns(Integer.parseInt(rowNumber[itemPosition]));
+                }
+                return false;
+            }
+        };
+
+        /** Setting dropdown items and item navigation listener for the actionbar */
+        actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
+
+
+
+        for(int i=0;i<15;i++) {
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -51,21 +92,23 @@ public class SongListActivity extends ActionBarActivity {
 
             CustomGrid customGrid = new CustomGrid(context);
 
-            GridView gridView = new GridView(this);
-            gridView.setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
-            gridView.setNumColumns(2);
-            gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-            gridView.setVerticalSpacing((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density));
-            gridView.setHorizontalSpacing((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density));
-            gridView.setPaddingRelative((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density), 0, 0, 0);
+            gridView[i] = new GridView(this);
+            gridView[i].setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
+            gridView[i].setNumColumns(2);
+            gridView[i].setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+            gridView[i].setVerticalSpacing((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density));
+            gridView[i].setHorizontalSpacing((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density));
+            gridView[i].setPaddingRelative((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density), 0, 0, 0);
             layoutParams = new ViewGroup.LayoutParams(500, ViewGroup.LayoutParams.WRAP_CONTENT);
-            gridView.setLayoutParams(layoutParams);
-            gridView.setAdapter(customGrid);
+            gridView[i].setLayoutParams(layoutParams);
+            gridView[i].setAdapter(customGrid);
 
-            innerLinearLayout.addView(gridView);
+            innerLinearLayout.addView(gridView[i]);
             horizontalScrollView.addView(innerLinearLayout);
             linearLayout.addView(horizontalScrollView);
         }
+
+        gridView[0].setNumColumns(3);
 
 
 
@@ -127,9 +170,10 @@ public class SongListActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
         }
+        */
 
         return super.onOptionsItemSelected(item);
     }
