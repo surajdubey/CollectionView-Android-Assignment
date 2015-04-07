@@ -1,66 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
-
-    >
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/linear"
         android:orientation="vertical"
+        android:id="@+id/linear"
         >
 
-        </LinearLayout>
+<!--
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Group Name"
+            android:padding="20dp"
+            />
 
-    <!--
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="suraj.collectionview.SongListFragment"
 
-        />
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="suraj.collectionview.SongListFragment"
+            >
 
-        />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:scrollbars="none"
+                >
 
-        -->
+                <GridView
+                    android:id="@+id/gridView"
+                    android:layout_width="500dp"
+                    android:layout_height="fill_parent"
+                    android:columnWidth="200dp"
+                    android:numColumns="3"
+                    android:scrollbars="horizontal"
 
-    <!--<TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Group Name"
-        android:id="@+id/group"
-        />
+                    android:verticalSpacing="20dp"
+                    android:horizontalSpacing="20dp"
+                    android:padding="20dp"
 
-    <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numColumns="auto_fit"
-        android:id="@+id/gridView"
-        ></GridView>
+                    android:smoothScrollbar="false">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Group Name"
-        android:id="@+id/group"
-
-        />
-
-    <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numColumns="auto_fit"
-        android:id="@+id/gridView"
-        ></GridView>
+                </GridView>
+            </LinearLayout>
+        </HorizontalScrollView>
 
         -->
-
-
+    </LinearLayout>
 
 </ScrollView>

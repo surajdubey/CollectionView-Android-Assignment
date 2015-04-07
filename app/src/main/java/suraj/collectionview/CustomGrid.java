@@ -43,7 +43,7 @@ public class CustomGrid extends BaseAdapter {
             grid = layoutInflater.inflate(R.layout.single_song, null);
 
             TextView songNameTextView = (TextView) grid.findViewById(R.id.songLabel);
-            songNameTextView.setText("Titanium");
+            songNameTextView.setText(String.valueOf(position));
 
         }
         else

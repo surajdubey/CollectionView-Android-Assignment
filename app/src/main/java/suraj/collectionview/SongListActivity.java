@@ -4,6 +4,7 @@ package suraj.collectionview;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
@@ -27,6 +28,11 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 
 public class SongListActivity extends ActionBarActivity {
 
@@ -36,14 +42,37 @@ public class SongListActivity extends ActionBarActivity {
     private Spinner rowNumberSpinner;
     GridView gridView[] = new GridView[15];
 
+    /** to store song name **/
+    String songName[] = new String[50];
+    String artistName[] = new String[50];
+    String albumName[] = new String[50];
+
+    String uniqueArtistName[] = new String[50];
+    String uniqueAlbumName[] = new String[50];
+
+    ArrayList<String> songAlbumList[] = new ArrayList[50];
+    ArrayList<String> songArtistList[] = new ArrayList[50];
+
+    /** Counter **/
+    int uniqueAlbumCounter = 0;
+    int uniqueArtistCounter = 0;
+
+    int maxValue = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 
         final String sortType[] = {"Artist", "Album"};
         final String rowNumber[] = {"1","2","3","4","5"};
+
+
+
+        /*
+        final ArrayList<String> sortType = new ArrayList<>();
+        sortType.add("Artist");
+        sortType.add("Album");
+        */
 
         setContentView(R.layout.activity_song_list);
 
@@ -78,57 +107,96 @@ public class SongListActivity extends ActionBarActivity {
             }
         });
 
-
-
-        //actionBar.setBackgroundDrawable(new ColorDrawable(0xff00DDED));
-        //Enabling dropdown list for ActionBar
-      /*  actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-
-
-
-        //for number of rows displayed on right hand side
-        /*final String rowNumber[] = {"1","2","3","4","5"};
-
-        //ArrayAdapter to populate dropdown list
-        ArrayAdapter<String> rowNumberAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, rowNumber);
-        //ArrayAdapter<String> rowNumberAdapter = new ArrayAdapter<String>(context,android.R.layout.simple_spinner_dropdown_item,)
-
-
-
-        //defining navigation listener
-        ActionBar.OnNavigationListener onNavigationListener = new ActionBar.OnNavigationListener() {
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                Toast.makeText(context, "Selected : "+rowNumber[itemPosition], Toast.LENGTH_SHORT).show();
-
-                for(int i=0;i<15;i++)
+            public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition, long l) {
+                if(itemPosition == 0)
                 {
-                    gridView[i].setNumColumns(Integer.parseInt(rowNumber[itemPosition]));
+                    // artist is selected
+                    for(int i=0;i<maxValue;i++)
+                    {
+                        int artistPosition = findArtist(artistName[i],i);
+
+                        /** No previous arraylist **/
+                        if(artistPosition == -1)
+                        {
+                            uniqueArtistName[i] = artistName[i];
+                            songArtistList[i] = new ArrayList<String>();
+                            songArtistList[i].add(songName[i]);
+                            uniqueArtistCounter++;
+                        }
+                        else
+                        {
+                            songArtistList[artistPosition].add(songName[i]);
+                        }
+
+                    }
+
                 }
-                return false;
+                //Toast.makeText(context, sortType[itemPosition], Toast.LENGTH_SHORT).show();
             }
-        };
 
-        /** Setting dropdown items and item navigation listener for the actionbar */
-        //actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-        // String sortValue[] = {"Artist", "Album"};
+            }
+        });
+
+        //reading file
+
+        AssetManager assetManager = getAssets();
+        BufferedReader bufferedReader = null;
+        String lineString = "";
+        try{
+            /** pass is used for while loop **/
+            int pass = 0;
+            bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("sample_music_data.csv")));
+            while((lineString = bufferedReader.readLine())!=null)
+            {
+                /** split the line with comma (,) **/
+                String tempString[] = lineString.split(",");
+
+                /** store song name **/
+                songName[pass] = tempString[0];
+                artistName[pass] = tempString[1];
+                albumName[pass] = tempString[2];
+
+                /** increment pass **/
+                pass++;
+
+            }
+            Log.d("Suraj Dubey", "File reading done");
+
+        }
+        catch (Exception e)
+        {
+
+            Log.d("Collection", "Failed");
+        }
 
 
+        /*CustomGrid customGrid = new CustomGrid(context);
+        GridView gridView = (GridView) findViewById(R.id.gridView);
 
-        //spinneradapter
+        gridView.setAdapter(customGrid);
+        gridView.setNumColumns(2);
 
-        //SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.actions,android.R.layout.simple_spinner_dropdown_item);
-        //actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
 
-        for(int i=0;i<15;i++) {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(context, "Titanium", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        */
+
+        for(int i=0;i<uniqueArtistCounter;i++) {
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             TextView textView = new TextView(this);
-            textView.setText("Group Name");
+            textView.setText(uniqueArtistName[i]);
             textView.setLayoutParams(layoutParams);
             linearLayout.addView(textView);
 
@@ -143,6 +211,7 @@ public class SongListActivity extends ActionBarActivity {
 
             CustomGrid customGrid = new CustomGrid(context);
 
+
             gridView[i] = new GridView(this);
 
             gridView[i].setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
@@ -153,45 +222,94 @@ public class SongListActivity extends ActionBarActivity {
 
             int paddingSpace = (int) (20 / getApplicationContext().getResources().getDisplayMetrics().density);
             gridView[i].setPaddingRelative(paddingSpace, paddingSpace, paddingSpace, paddingSpace);
-            layoutParams = new ViewGroup.LayoutParams(1000, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams = new ViewGroup.LayoutParams(1000, 200);
             gridView[i].setLayoutParams(layoutParams);
             gridView[i].setAdapter(customGrid);
 
             innerLinearLayout.addView(gridView[i]);
             horizontalScrollView.addView(innerLinearLayout);
             linearLayout.addView(horizontalScrollView);
+
+
+
         }
 
-        gridView[0].setNumColumns(3);
+        /*ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        TextView textView = new TextView(this);
+        textView.setText("Group Name");
+        textView.setLayoutParams(layoutParams);
+        linearLayout.addView(textView);
+
+        HorizontalScrollView horizontalScrollView = new HorizontalScrollView(this);
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        horizontalScrollView.setLayoutParams(layoutParams);
+
+        LinearLayout innerLinearLayout = new LinearLayout(this);
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        innerLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        innerLinearLayout.setLayoutParams(layoutParams);
+
+        CustomGrid customGrid = new CustomGrid(context);
+
+        GridView gridView = new GridView(this);
+
+        layoutParams = new ViewGroup.LayoutParams(500, 500);
+        gridView.setLayoutParams(layoutParams);
+
+        gridView.setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
+        gridView.setNumColumns(2);
+        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+
+        gridView.setAdapter(customGrid);
+
+        innerLinearLayout.addView(gridView);
+        horizontalScrollView.addView(innerLinearLayout);
+        linearLayout.addView(horizontalScrollView);
+        */
+
+
 
     }
+
+    private int findAlbum(String nameToSearch, int position)
+    {
+        int foundIndex = -1;
+        for(int i = 0;i<position;i++)
+        {
+            if(albumName[i].equals(nameToSearch))
+            {
+                foundIndex = i;
+                return i;
+            }
+        }
+        return foundIndex;
+
+    }
+
+
+    private int findArtist(String nameToSearch, int position)
+    {
+        int foundIndex = -1;
+        for(int i = 0;i<position;i++)
+        {
+            if(artistName[i].equals(nameToSearch))
+            {
+                foundIndex = i;
+                return i;
+            }
+        }
+        return foundIndex;
+
+    }
+
+
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_song_list, menu);
-
-        /*MenuItem sortMenuSpinner = menu.findItem(R.id.menu_sort_type);
-
-        Log.d("song","1");
-
-        //sortMenuSpinner.setVisible( getSupportActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST );
-        //Log.d("song",R.array.actions);
-
-        //setting menu
-
-        View view = sortMenuSpinner.getActionView();
-        if(view == null)
-            Log.d("song","null view");
-        if(view instanceof Spinner)
-        {
-
-            Spinner spinner = (Spinner) view;
-            spinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.actions, android.R.layout.simple_spinner_dropdown_item));
-            Log.d("song","5");
-
-        }*/
 
         return true;
     }
@@ -202,12 +320,6 @@ public class SongListActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }
-        */
 
         return super.onOptionsItemSelected(item);
     }
