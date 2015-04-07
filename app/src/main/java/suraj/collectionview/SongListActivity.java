@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +40,9 @@ public class SongListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_song_list);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(0xff00DDED));
+        //actionBar.setBackgroundDrawable(new ColorDrawable(0xff00DDED));
         //Enabling dropdown list for ActionBar
+        actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 
@@ -47,10 +51,12 @@ public class SongListActivity extends ActionBarActivity {
         final GridView gridView[] = new GridView[15];
 
         //for number of rows displayed on right hand side
-        final String rowNumber[] = {"1","2","3","4","5"};
+        /*final String rowNumber[] = {"1","2","3","4","5"};
 
         //ArrayAdapter to populate dropdown list
         ArrayAdapter<String> rowNumberAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, rowNumber);
+        //ArrayAdapter<String> rowNumberAdapter = new ArrayAdapter<String>(context,android.R.layout.simple_spinner_dropdown_item,)
+
 
 
         //defining navigation listener
@@ -68,7 +74,19 @@ public class SongListActivity extends ActionBarActivity {
         };
 
         /** Setting dropdown items and item navigation listener for the actionbar */
-        actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
+        //actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
+
+
+
+
+
+        String sortValue[] = {"Artist", "Album"};
+
+        //spinneradapter
+
+        //SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.actions,android.R.layout.simple_spinner_dropdown_item);
+        //actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
+
 
 
 
@@ -93,13 +111,16 @@ public class SongListActivity extends ActionBarActivity {
             CustomGrid customGrid = new CustomGrid(context);
 
             gridView[i] = new GridView(this);
+
             gridView[i].setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
             gridView[i].setNumColumns(2);
             gridView[i].setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
             gridView[i].setVerticalSpacing((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density));
             gridView[i].setHorizontalSpacing((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density));
-            gridView[i].setPaddingRelative((int) (20 / getApplicationContext().getResources().getDisplayMetrics().density), 0, 0, 0);
-            layoutParams = new ViewGroup.LayoutParams(500, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            int paddingSpace = (int) (20 / getApplicationContext().getResources().getDisplayMetrics().density);
+            gridView[i].setPaddingRelative(paddingSpace, paddingSpace, paddingSpace, paddingSpace);
+            layoutParams = new ViewGroup.LayoutParams(1000, ViewGroup.LayoutParams.MATCH_PARENT);
             gridView[i].setLayoutParams(layoutParams);
             gridView[i].setAdapter(customGrid);
 
@@ -109,17 +130,6 @@ public class SongListActivity extends ActionBarActivity {
         }
 
         gridView[0].setNumColumns(3);
-
-
-
-
-
-
-
-
-
-
-
 
         /*String[] numbers = new String[] {
                 "A", "B", "C", "D", "E",
@@ -159,6 +169,28 @@ public class SongListActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_song_list, menu);
+
+        MenuItem sortMenuSpinner = menu.findItem(R.id.menu_sort_type);
+
+        Log.d("song","1");
+
+        //sortMenuSpinner.setVisible( getSupportActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST );
+        //Log.d("song",R.array.actions);
+
+        //setting menu
+
+        View view = sortMenuSpinner.getActionView();
+        if(view == null)
+            Log.d("song","null view");
+        if(view instanceof Spinner)
+        {
+
+            Spinner spinner = (Spinner) view;
+            spinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.actions, android.R.layout.simple_spinner_dropdown_item));
+            Log.d("song","5");
+
+        }
+
         return true;
     }
 
