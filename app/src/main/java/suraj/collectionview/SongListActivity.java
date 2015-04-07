@@ -60,6 +60,8 @@ public class SongListActivity extends ActionBarActivity {
     int uniqueAlbumCounter = 0;
     int uniqueArtistCounter = 0;
 
+    String selectedSortType = "";
+
     LinearLayout linearLayout;
 
 
@@ -102,6 +104,20 @@ public class SongListActivity extends ActionBarActivity {
                 /*for(int i=0;i<15;i++) {
                     gridView[i].setNumColumns(Integer.parseInt(rowNumber[itemPosition]));
                 }*/
+                int rowSelected = Integer.parseInt(rowNumber[itemPosition]);
+
+                if(selectedSortType.equals(sortType[0]))
+                {
+                    for(int i=0;i<uniqueArtistCounter;i++)
+                    {
+                        int songSize = songArtistList[i].size();
+                        int numCol = songSize/rowSelected;
+                        if(songSize%rowSelected != 0)
+                            numCol++;
+                        gridView[i].setNumColumns(numCol);
+                    }
+
+                }
             }
 
             @Override
@@ -113,8 +129,11 @@ public class SongListActivity extends ActionBarActivity {
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition, long l) {
+
+                selectedSortType = sortType[itemPosition];
                 if(itemPosition == 0)
                 {
+
                     uniqueArtistCounter = 0;
                     // artist is selected
                     for(int i=0;i<maxValue;i++)
@@ -279,7 +298,7 @@ public class SongListActivity extends ActionBarActivity {
 
             int paddingSpace = (int) (20 / getApplicationContext().getResources().getDisplayMetrics().density);
             gridView[i].setPaddingRelative(paddingSpace, paddingSpace, paddingSpace, paddingSpace);
-            layoutParams = new ViewGroup.LayoutParams(1000, 200);
+            layoutParams = new ViewGroup.LayoutParams(300*songArtistList[i].size(), 200);
             gridView[i].setLayoutParams(layoutParams);
             gridView[i].setAdapter(customGrid);
 
