@@ -7,19 +7,23 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class CustomGrid extends BaseAdapter {
     private Context context;
     //String songName[];
+    ArrayList<String> songNameList = new ArrayList();
 
-    CustomGrid(Context context)
+    CustomGrid(Context context, ArrayList<String> songNameList)
     {
         this.context = context;
         //this.songName = songName;
+        this.songNameList = songNameList;
     }
 
     @Override
     public int getCount() {
-        return 6;
+        return songNameList.size();
     }
 
     @Override
@@ -43,7 +47,7 @@ public class CustomGrid extends BaseAdapter {
             grid = layoutInflater.inflate(R.layout.single_song, null);
 
             TextView songNameTextView = (TextView) grid.findViewById(R.id.songLabel);
-            songNameTextView.setText(String.valueOf(position));
+            songNameTextView.setText(songNameList.get(position));
 
         }
         else

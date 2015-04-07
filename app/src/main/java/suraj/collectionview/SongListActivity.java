@@ -42,7 +42,7 @@ public class SongListActivity extends ActionBarActivity {
     private Spinner rowNumberSpinner;
     GridView gridView[] = new GridView[15];
 
-    int maxValue = 38;
+    int maxValue = 37;
 
 
     /** to store song name **/
@@ -119,7 +119,7 @@ public class SongListActivity extends ActionBarActivity {
                     // artist is selected
                     for(int i=0;i<maxValue;i++)
                     {
-                        int artistPosition = findArtist(artistName[i],i);
+                        int artistPosition = findArtist(artistName[i],uniqueArtistCounter);
 
                         Log.d("debugging", artistName[i]+" "+i+" : Answer = "+artistPosition);
 
@@ -127,8 +127,8 @@ public class SongListActivity extends ActionBarActivity {
                         if(artistPosition == -1)
                         {
                             uniqueArtistName[uniqueArtistCounter] = artistName[i];
-                            songArtistList[i] = new ArrayList<String>();
-                            songArtistList[i].add(songName[i]);
+                            songArtistList[uniqueArtistCounter] = new ArrayList<String>();
+                            songArtistList[uniqueArtistCounter].add(songName[i]);
                             uniqueArtistCounter++;
                         }
                         else
@@ -136,9 +136,11 @@ public class SongListActivity extends ActionBarActivity {
                             songArtistList[artistPosition].add(songName[i]);
                         }
 
-                        setUpGrid();
 
                     }
+
+                    setUpGrid();
+
 
 
                     Log.d("debugging", String.valueOf(uniqueArtistCounter));
@@ -162,6 +164,7 @@ public class SongListActivity extends ActionBarActivity {
             /** pass is used for while loop **/
             int pass = 0;
             bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("sample_music_data.csv")));
+            lineString = bufferedReader.readLine();
             while((lineString = bufferedReader.readLine())!=null)
             {
                 /** split the line with comma (,) **/
@@ -245,6 +248,8 @@ public class SongListActivity extends ActionBarActivity {
     {
         for(int i=0;i<uniqueArtistCounter;i++) {
 
+            // Log.d("debugging", "Counter is "+String.valueOf(uniqueArtistCounter));
+
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             TextView textView = new TextView(this);
@@ -261,7 +266,7 @@ public class SongListActivity extends ActionBarActivity {
             innerLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
             innerLinearLayout.setLayoutParams(layoutParams);
 
-            CustomGrid customGrid = new CustomGrid(context);
+            CustomGrid customGrid = new CustomGrid(context, songArtistList[i]);
 
 
             gridView[i] = new GridView(this);
@@ -281,12 +286,7 @@ public class SongListActivity extends ActionBarActivity {
             innerLinearLayout.addView(gridView[i]);
             horizontalScrollView.addView(innerLinearLayout);
             linearLayout.addView(horizontalScrollView);
-
-
-
         }
-
-
     }
 
     private int findAlbum(String nameToSearch, int position)
@@ -310,7 +310,7 @@ public class SongListActivity extends ActionBarActivity {
         int foundIndex = -1;
         for(int i = 0;i<position;i++)
         {
-            if(artistName[i].equals(nameToSearch))
+            if(uniqueArtistName[i].equals(nameToSearch))
             {
                 foundIndex = i;
                 return i;
