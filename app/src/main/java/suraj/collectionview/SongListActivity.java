@@ -42,22 +42,26 @@ public class SongListActivity extends ActionBarActivity {
     private Spinner rowNumberSpinner;
     GridView gridView[] = new GridView[15];
 
+    int maxValue = 38;
+
+
     /** to store song name **/
-    String songName[] = new String[50];
-    String artistName[] = new String[50];
-    String albumName[] = new String[50];
+    String songName[] = new String[maxValue];
+    String artistName[] = new String[maxValue];
+    String albumName[] = new String[maxValue];
 
-    String uniqueArtistName[] = new String[50];
-    String uniqueAlbumName[] = new String[50];
+    String uniqueArtistName[] = new String[maxValue];
+    String uniqueAlbumName[] = new String[maxValue];
 
-    ArrayList<String> songAlbumList[] = new ArrayList[50];
-    ArrayList<String> songArtistList[] = new ArrayList[50];
+    ArrayList<String> songAlbumList[] = new ArrayList[maxValue];
+    ArrayList<String> songArtistList[] = new ArrayList[maxValue];
 
     /** Counter **/
     int uniqueAlbumCounter = 0;
     int uniqueArtistCounter = 0;
 
-    int maxValue = 50;
+    LinearLayout linearLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +91,7 @@ public class SongListActivity extends ActionBarActivity {
 
         sortSpinner = (Spinner) findViewById(R.id.sortSpinner);
         rowNumberSpinner = (Spinner) findViewById(R.id.rowNumberSpinner);
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
-
+        linearLayout = (LinearLayout) findViewById(R.id.linear);
 
         sortSpinner.setAdapter(sortAdapter);
         rowNumberSpinner.setAdapter(rowNumberAdapter);
@@ -96,9 +99,9 @@ public class SongListActivity extends ActionBarActivity {
         rowNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition, long l) {
-                for(int i=0;i<15;i++) {
+                /*for(int i=0;i<15;i++) {
                     gridView[i].setNumColumns(Integer.parseInt(rowNumber[itemPosition]));
-                }
+                }*/
             }
 
             @Override
@@ -112,15 +115,18 @@ public class SongListActivity extends ActionBarActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition, long l) {
                 if(itemPosition == 0)
                 {
+                    uniqueArtistCounter = 0;
                     // artist is selected
                     for(int i=0;i<maxValue;i++)
                     {
                         int artistPosition = findArtist(artistName[i],i);
 
+                        Log.d("debugging", artistName[i]+" "+i+" : Answer = "+artistPosition);
+
                         /** No previous arraylist **/
                         if(artistPosition == -1)
                         {
-                            uniqueArtistName[i] = artistName[i];
+                            uniqueArtistName[uniqueArtistCounter] = artistName[i];
                             songArtistList[i] = new ArrayList<String>();
                             songArtistList[i].add(songName[i]);
                             uniqueArtistCounter++;
@@ -130,7 +136,12 @@ public class SongListActivity extends ActionBarActivity {
                             songArtistList[artistPosition].add(songName[i]);
                         }
 
+                        setUpGrid();
+
                     }
+
+
+                    Log.d("debugging", String.valueOf(uniqueArtistCounter));
 
                 }
                 //Toast.makeText(context, sortType[itemPosition], Toast.LENGTH_SHORT).show();
@@ -191,6 +202,47 @@ public class SongListActivity extends ActionBarActivity {
 
         */
 
+
+        /*ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        TextView textView = new TextView(this);
+        textView.setText("Group Name");
+        textView.setLayoutParams(layoutParams);
+        linearLayout.addView(textView);
+
+        HorizontalScrollView horizontalScrollView = new HorizontalScrollView(this);
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        horizontalScrollView.setLayoutParams(layoutParams);
+
+        LinearLayout innerLinearLayout = new LinearLayout(this);
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        innerLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        innerLinearLayout.setLayoutParams(layoutParams);
+
+        CustomGrid customGrid = new CustomGrid(context);
+
+        GridView gridView = new GridView(this);
+
+        layoutParams = new ViewGroup.LayoutParams(500, 500);
+        gridView.setLayoutParams(layoutParams);
+
+        gridView.setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
+        gridView.setNumColumns(2);
+        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+
+        gridView.setAdapter(customGrid);
+
+        innerLinearLayout.addView(gridView);
+        horizontalScrollView.addView(innerLinearLayout);
+        linearLayout.addView(horizontalScrollView);
+        */
+
+
+
+    }
+
+    private void setUpGrid()
+    {
         for(int i=0;i<uniqueArtistCounter;i++) {
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -233,41 +285,6 @@ public class SongListActivity extends ActionBarActivity {
 
 
         }
-
-        /*ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        TextView textView = new TextView(this);
-        textView.setText("Group Name");
-        textView.setLayoutParams(layoutParams);
-        linearLayout.addView(textView);
-
-        HorizontalScrollView horizontalScrollView = new HorizontalScrollView(this);
-        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        horizontalScrollView.setLayoutParams(layoutParams);
-
-        LinearLayout innerLinearLayout = new LinearLayout(this);
-        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        innerLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        innerLinearLayout.setLayoutParams(layoutParams);
-
-        CustomGrid customGrid = new CustomGrid(context);
-
-        GridView gridView = new GridView(this);
-
-        layoutParams = new ViewGroup.LayoutParams(500, 500);
-        gridView.setLayoutParams(layoutParams);
-
-        gridView.setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
-        gridView.setNumColumns(2);
-        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-
-        gridView.setAdapter(customGrid);
-
-        innerLinearLayout.addView(gridView);
-        horizontalScrollView.addView(innerLinearLayout);
-        linearLayout.addView(horizontalScrollView);
-        */
-
 
 
     }
