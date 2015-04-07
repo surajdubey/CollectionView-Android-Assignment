@@ -44,7 +44,6 @@ public class SongListActivity extends ActionBarActivity {
 
     int maxValue = 37;
 
-
     /** to store song name **/
     String songName[] = new String[maxValue];
     String artistName[] = new String[maxValue];
@@ -71,14 +70,6 @@ public class SongListActivity extends ActionBarActivity {
 
         final String sortType[] = {"Artist", "Album"};
         final String rowNumber[] = {"1","2","3","4","5"};
-
-
-
-        /*
-        final ArrayList<String> sortType = new ArrayList<>();
-        sortType.add("Artist");
-        sortType.add("Album");
-        */
 
         setContentView(R.layout.activity_song_list);
 
@@ -115,6 +106,7 @@ public class SongListActivity extends ActionBarActivity {
                         if(songSize%rowSelected != 0)
                             numCol++;
                         gridView[i].setNumColumns(numCol);
+
                     }
 
                 }
@@ -154,18 +146,12 @@ public class SongListActivity extends ActionBarActivity {
                         {
                             songArtistList[artistPosition].add(songName[i]);
                         }
-
-
                     }
 
                     setUpGrid();
 
-
-
                     Log.d("debugging", String.valueOf(uniqueArtistCounter));
-
                 }
-                //Toast.makeText(context, sortType[itemPosition], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -206,60 +192,6 @@ public class SongListActivity extends ActionBarActivity {
 
             Log.d("Collection", "Failed");
         }
-
-
-        /*CustomGrid customGrid = new CustomGrid(context);
-        GridView gridView = (GridView) findViewById(R.id.gridView);
-
-        gridView.setAdapter(customGrid);
-        gridView.setNumColumns(2);
-
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(context, "Titanium", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        */
-
-
-        /*ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        TextView textView = new TextView(this);
-        textView.setText("Group Name");
-        textView.setLayoutParams(layoutParams);
-        linearLayout.addView(textView);
-
-        HorizontalScrollView horizontalScrollView = new HorizontalScrollView(this);
-        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        horizontalScrollView.setLayoutParams(layoutParams);
-
-        LinearLayout innerLinearLayout = new LinearLayout(this);
-        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        innerLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        innerLinearLayout.setLayoutParams(layoutParams);
-
-        CustomGrid customGrid = new CustomGrid(context);
-
-        GridView gridView = new GridView(this);
-
-        layoutParams = new ViewGroup.LayoutParams(500, 500);
-        gridView.setLayoutParams(layoutParams);
-
-        gridView.setColumnWidth((int) (200 / getApplicationContext().getResources().getDisplayMetrics().density));
-        gridView.setNumColumns(2);
-        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-
-        gridView.setAdapter(customGrid);
-
-        innerLinearLayout.addView(gridView);
-        horizontalScrollView.addView(innerLinearLayout);
-        linearLayout.addView(horizontalScrollView);
-        */
-
-
 
     }
 
@@ -338,9 +270,6 @@ public class SongListActivity extends ActionBarActivity {
         return foundIndex;
 
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
