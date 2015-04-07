@@ -32,23 +32,61 @@ public class SongListActivity extends ActionBarActivity {
 
     final Context context = this;
 
+    private Spinner sortSpinner;
+    private Spinner rowNumberSpinner;
+    GridView gridView[] = new GridView[15];
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 
+        final String sortType[] = {"Artist", "Album"};
+        final String rowNumber[] = {"1","2","3","4","5"};
+
         setContentView(R.layout.activity_song_list);
 
+        ArrayAdapter<String> sortAdapter =  new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, sortType);
+        ArrayAdapter<String> rowNumberAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, rowNumber);
+
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.custom_actionbar);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        sortSpinner = (Spinner) findViewById(R.id.sortSpinner);
+        rowNumberSpinner = (Spinner) findViewById(R.id.rowNumberSpinner);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
+
+
+        sortSpinner.setAdapter(sortAdapter);
+        rowNumberSpinner.setAdapter(rowNumberAdapter);
+
+        rowNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition, long l) {
+                for(int i=0;i<15;i++) {
+                    gridView[i].setNumColumns(Integer.parseInt(rowNumber[itemPosition]));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+
         //actionBar.setBackgroundDrawable(new ColorDrawable(0xff00DDED));
         //Enabling dropdown list for ActionBar
-        actionBar.setDisplayShowTitleEnabled(false);
+      /*  actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
 
-        final GridView gridView[] = new GridView[15];
 
         //for number of rows displayed on right hand side
         /*final String rowNumber[] = {"1","2","3","4","5"};
@@ -76,19 +114,14 @@ public class SongListActivity extends ActionBarActivity {
         /** Setting dropdown items and item navigation listener for the actionbar */
         //actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
 
+        // String sortValue[] = {"Artist", "Album"};
 
 
-
-
-        String sortValue[] = {"Artist", "Album"};
 
         //spinneradapter
 
         //SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.actions,android.R.layout.simple_spinner_dropdown_item);
         //actionBar.setListNavigationCallbacks(rowNumberAdapter, onNavigationListener);
-
-
-
 
         for(int i=0;i<15;i++) {
 
@@ -131,37 +164,6 @@ public class SongListActivity extends ActionBarActivity {
 
         gridView[0].setNumColumns(3);
 
-        /*String[] numbers = new String[] {
-                "A", "B", "C", "D", "E",
-                "F"};
-
-        TextView textView = (TextView) findViewById(R.id.group);
-        textView.setText("Changed Text");
-
-
-
-        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);
-
-        //CustomGrid customGrid = new CustomGrid(context);
-        GridView gridView = (GridView) findViewById(R.id.gridView);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,numbers);
-
-        gridView.setAdapter(adapter);
-        //gridView.setNumColumns(2);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(context, "Titanium", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        */
-
-
-
-
     }
 
 
@@ -170,7 +172,7 @@ public class SongListActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_song_list, menu);
 
-        MenuItem sortMenuSpinner = menu.findItem(R.id.menu_sort_type);
+        /*MenuItem sortMenuSpinner = menu.findItem(R.id.menu_sort_type);
 
         Log.d("song","1");
 
@@ -189,7 +191,7 @@ public class SongListActivity extends ActionBarActivity {
             spinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.actions, android.R.layout.simple_spinner_dropdown_item));
             Log.d("song","5");
 
-        }
+        }*/
 
         return true;
     }

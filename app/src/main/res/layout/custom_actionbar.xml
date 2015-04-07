@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="5"
+    >
+
+    <Spinner
+        android:id="@+id/sortSpinner"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <Spinner
+        android:id="@+id/rowNumberSpinner"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="120dp"
+        />
+
+</LinearLayout>
