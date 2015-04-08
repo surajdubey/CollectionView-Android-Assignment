@@ -437,7 +437,7 @@ public class SongListActivity extends ActionBarActivity {
         else
         {
             /** if album is selected
-            * for every unique album */
+             * for every unique album */
             for(int i=0;i<uniqueAlbumCounter;i++)
             {
                 /** get number of songs */
