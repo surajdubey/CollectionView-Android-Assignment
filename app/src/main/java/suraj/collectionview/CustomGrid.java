@@ -10,19 +10,28 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class CustomGrid extends BaseAdapter {
+
+    /**
+     * reference of Context class
+     */
     private Context context;
-    //String songName[];
+
+    /**
+     * arrarList of songName to be populated
+     */
     ArrayList<String> songNameList = new ArrayList();
 
-    CustomGrid(Context context, ArrayList<String> songNameList)
-    {
+    CustomGrid(Context context, ArrayList<String> songNameList) {
         this.context = context;
-        //this.songName = songName;
         this.songNameList = songNameList;
     }
 
+    /**
+     * return length of arraylist
+     */
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return songNameList.size();
     }
 
@@ -39,22 +48,35 @@ public class CustomGrid extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
 
+        /** reference of View */
         View grid;
+
+        /** instance of LayoutInflater to be inflated */
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        /** if counterView is not initialized */
         if(convertView == null)
         {
+            /** initialize grid View */
             grid = new View(context);
+
+            /** set layoutInflator to grid */
             grid = layoutInflater.inflate(R.layout.single_song, null);
 
+            /** instance of textView from songLabel file(XML) */
             TextView songNameTextView = (TextView) grid.findViewById(R.id.songLabel);
+
+            /** set text to textView */
             songNameTextView.setText(songNameList.get(position));
 
         }
         else
         {
+            /** assign grid to convertView since its initialized */
             grid = (View) convertView;
         }
 
+        /** return grid */
         return grid;
     }
 }
