@@ -103,9 +103,21 @@ public class SongListActivity extends ActionBarActivity {
                     {
                         int songSize = songArtistList[i].size();
                         int numCol = songSize/rowSelected;
+
+
                         if(songSize%rowSelected != 0)
                             numCol++;
                         gridView[i].setNumColumns(numCol);
+                        //gridView[i].setR
+
+                        int numRows = songSize/numCol;
+
+                        if(songSize % numCol != 0)
+                            numRows++;
+
+                        LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(300 * numCol , 100 * numRows);
+
+                        gridView[i].setLayoutParams(newLayoutParams);
 
                     }
 
