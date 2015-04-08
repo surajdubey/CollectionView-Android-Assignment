@@ -40,7 +40,10 @@ public class SongListActivity extends ActionBarActivity {
 
     private Spinner sortSpinner;
     private Spinner rowNumberSpinner;
-    GridView gridView[] = new GridView[15];
+    GridView gridView[];
+
+    final String sortType[] = {"Artist", "Album"};
+    final String rowNumber[] = {"1","2","3","4","5"};
 
     int maxValue = 37;
 
@@ -59,6 +62,8 @@ public class SongListActivity extends ActionBarActivity {
     int uniqueAlbumCounter = 0;
     int uniqueArtistCounter = 0;
 
+    int rowSelected = 1;
+
     String selectedSortType = "";
 
     LinearLayout linearLayout;
@@ -68,8 +73,6 @@ public class SongListActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final String sortType[] = {"Artist", "Album"};
-        final String rowNumber[] = {"1","2","3","4","5"};
 
         setContentView(R.layout.activity_song_list);
 
@@ -92,36 +95,10 @@ public class SongListActivity extends ActionBarActivity {
         rowNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition, long l) {
-                /*for(int i=0;i<15;i++) {
-                    gridView[i].setNumColumns(Integer.parseInt(rowNumber[itemPosition]));
-                }*/
-                int rowSelected = Integer.parseInt(rowNumber[itemPosition]);
 
-                if(selectedSortType.equals(sortType[0]))
-                {
-                    for(int i=0;i<uniqueArtistCounter;i++)
-                    {
-                        int songSize = songArtistList[i].size();
-                        int numCol = songSize/rowSelected;
+                rowSelected = Integer.parseInt(rowNumber[itemPosition]);
 
-
-                        if(songSize%rowSelected != 0)
-                            numCol++;
-                        gridView[i].setNumColumns(numCol);
-                        //gridView[i].setR
-
-                        int numRows = songSize/numCol;
-
-                        if(songSize % numCol != 0)
-                            numRows++;
-
-                        LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(300 * numCol , 100 * numRows);
-
-                        gridView[i].setLayoutParams(newLayoutParams);
-
-                    }
-
-                }
+                updateGridLayout();
             }
 
             @Override
@@ -135,6 +112,7 @@ public class SongListActivity extends ActionBarActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition, long l) {
 
                 selectedSortType = sortType[itemPosition];
+
                 if(itemPosition == 0)
                 {
 
@@ -159,11 +137,34 @@ public class SongListActivity extends ActionBarActivity {
                             songArtistList[artistPosition].add(songName[i]);
                         }
                     }
-
-                    setUpGrid();
-
-                    Log.d("debugging", String.valueOf(uniqueArtistCounter));
                 }
+
+                else //album sort selected
+                {
+                    uniqueAlbumCounter = 0;
+                    // artist is selected
+                    for(int i=0;i<maxValue;i++)
+                    {
+                        int albumPosition = findAlbum(albumName[i],uniqueAlbumCounter);
+
+                        /** No previous arraylist **/
+                        if(albumPosition == -1)
+                        {
+                            uniqueAlbumName[uniqueAlbumCounter] = albumName[i];
+                            songAlbumList[uniqueAlbumCounter] = new ArrayList<String>();
+                            songAlbumList[uniqueAlbumCounter].add(songName[i]);
+                            uniqueAlbumCounter++;
+                        }
+                        else
+                        {
+                            songAlbumList[albumPosition].add(songName[i]);
+                        }
+                    }
+
+                }
+
+                setUpGrid();
+                updateGridLayout();
             }
 
             @Override
@@ -209,14 +210,40 @@ public class SongListActivity extends ActionBarActivity {
 
     private void setUpGrid()
     {
-        for(int i=0;i<uniqueArtistCounter;i++) {
+        /** clear all views in linear layout */
+        linearLayout.removeAllViews();
+        /** Maximum number of GridView to be displayed */
+        int maxGridCount = 0;
+
+        /** selected unique artist value if artist is selected or select unique album count*/
+        if(selectedSortType.equals("Artist"))
+        {
+            maxGridCount = uniqueArtistCounter;
+        }
+        else
+        {
+            maxGridCount = uniqueAlbumCounter;
+        }
+
+        gridView = new GridView[maxGridCount];
+
+        for(int i=0;i<maxGridCount;i++) {
 
             // Log.d("debugging", "Counter is "+String.valueOf(uniqueArtistCounter));
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             TextView textView = new TextView(this);
-            textView.setText(uniqueArtistName[i]);
+
+            if(selectedSortType.equals("Artist"))
+            {
+                textView.setText(uniqueArtistName[i]);
+            }
+            else
+            {
+                textView.setText(uniqueAlbumName[i]);
+            }
+
             textView.setLayoutParams(layoutParams);
             linearLayout.addView(textView);
 
@@ -229,8 +256,16 @@ public class SongListActivity extends ActionBarActivity {
             innerLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
             innerLinearLayout.setLayoutParams(layoutParams);
 
-            CustomGrid customGrid = new CustomGrid(context, songArtistList[i]);
+            CustomGrid customGrid;
 
+            if(selectedSortType.equals("Artist"))
+            {
+                customGrid = new CustomGrid(context, songArtistList[i]);
+            }
+            else
+            {
+                customGrid = new CustomGrid(context, songAlbumList[i]);
+            }
 
             gridView[i] = new GridView(this);
 
@@ -242,7 +277,16 @@ public class SongListActivity extends ActionBarActivity {
 
             int paddingSpace = (int) (20 / getApplicationContext().getResources().getDisplayMetrics().density);
             gridView[i].setPaddingRelative(paddingSpace, paddingSpace, paddingSpace, paddingSpace);
-            layoutParams = new ViewGroup.LayoutParams(300*songArtistList[i].size(), 200);
+
+            if(selectedSortType.equals("Artist"))
+            {
+                layoutParams = new ViewGroup.LayoutParams(300*songArtistList[i].size(), 200);
+            }
+            else
+            {
+                layoutParams = new ViewGroup.LayoutParams(300*songAlbumList[i].size(), 200);
+            }
+
             gridView[i].setLayoutParams(layoutParams);
             gridView[i].setAdapter(customGrid);
 
@@ -252,12 +296,68 @@ public class SongListActivity extends ActionBarActivity {
         }
     }
 
+    private void updateGridLayout()
+    {
+        if(selectedSortType.equals(sortType[0]))
+        {
+            for(int i=0;i<uniqueArtistCounter;i++)
+            {
+                int songSize = songArtistList[i].size();
+                int numCol = songSize/rowSelected;
+
+
+                if(songSize%rowSelected != 0)
+                    numCol++;
+                gridView[i].setNumColumns(numCol);
+                //gridView[i].setR
+
+                int numRows = songSize/numCol;
+
+                if(songSize % numCol != 0)
+                    numRows++;
+
+                LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(300 * numCol , 100 * numRows);
+
+                gridView[i].setLayoutParams(newLayoutParams);
+
+            }
+
+        }
+
+        else
+        {
+            for(int i=0;i<uniqueAlbumCounter;i++)
+            {
+                int songSize = songAlbumList[i].size();
+                int numCol = songSize/rowSelected;
+
+
+                if(songSize%rowSelected != 0)
+                    numCol++;
+                gridView[i].setNumColumns(numCol);
+                //gridView[i].setR
+
+                int numRows = songSize/numCol;
+
+                if(songSize % numCol != 0)
+                    numRows++;
+
+                LinearLayout.LayoutParams newLayoutParams = new LinearLayout.LayoutParams(300 * numCol , 100 * numRows);
+
+                gridView[i].setLayoutParams(newLayoutParams);
+
+            }
+
+        }
+
+    }
+
     private int findAlbum(String nameToSearch, int position)
     {
         int foundIndex = -1;
         for(int i = 0;i<position;i++)
         {
-            if(albumName[i].equals(nameToSearch))
+            if(uniqueAlbumName[i].equals(nameToSearch))
             {
                 foundIndex = i;
                 return i;
